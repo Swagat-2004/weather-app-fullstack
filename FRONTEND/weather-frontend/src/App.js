@@ -12,40 +12,40 @@ function App() {
 
   const handleSearch = async () => {
 
-    if (city.trim() === "") {
-      alert("Please enter a city name");
+  if (city.trim() === "") {
+    alert("Please enter a city name");
+    return;
+  }
+
+  try {
+
+    setLoading(true);
+
+    const response = await fetch(`https://weather-app-fullstack-production.up.railway.app/weather/${city}`);
+
+    if (!response.ok) {
+      setWeather(null);
+      setError("City not found");
+      setLoading(false);
       return;
     }
 
-    try {
+    const data = await response.json();
 
-      setLoading(true);
+    setWeather(data);
+    setError("");
 
-      const response = await fetch(`http://localhost:8080/weather/${city}`);
+  } catch (error) {
 
-      if (!response.ok) {
-        setWeather(null);
-        setError("City not found");
-        setLoading(false);
-        return;
-      }
+    setWeather(null);
+    setError("Unable to fetch weather data");
 
-      const data = await response.json();
+  } finally {
 
-      setWeather(data);
-      setError("");
+    setLoading(false);
 
-    } catch (error) {
-
-      setWeather(null);
-      setError("Unable to fetch weather data");
-
-    } finally {
-
-      setLoading(false);
-
-    }
-  };
+  }
+};
 
   const getLocationWeather = () => {
 
